@@ -9,6 +9,7 @@
 #import "TWImagePickerController.h"
 #import <Photos/Photos.h>
 #import "TWPhotoCell.h"
+#import <AssetsLibrary/AssetsLibrary.h>
 
 #define kScreenWidth                           [[UIScreen mainScreen] bounds].size.width
 #define kScreenHeight                          [[UIScreen mainScreen] bounds].size.height
@@ -84,19 +85,35 @@
 
 - (void)getOriginalImages
 {
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        // 获得所有的自定义相簿
-        PHFetchResult<PHAssetCollection *> *assetCollections = [PHAssetCollection fetchAssetCollectionsWithType:PHAssetCollectionTypeAlbum subtype:PHAssetCollectionSubtypeAlbumRegular options:nil];
-        // 遍历所有的自定义相簿
-        for (PHAssetCollection *assetCollection in assetCollections) {
-            [self enumerateAssetsInAssetCollection:assetCollection original:YES];
-        }
-        
-        // 获得相机胶卷
-        PHAssetCollection *cameraRoll = [PHAssetCollection fetchAssetCollectionsWithType:PHAssetCollectionTypeSmartAlbum subtype:PHAssetCollectionSubtypeSmartAlbumUserLibrary options:nil].lastObject;
-        // 遍历相机胶卷,获取大图
-        [self enumerateAssetsInAssetCollection:cameraRoll original:YES];
-    });
+
+    ALAuthorizationStatus author = [ALAssetsLibrary authorizationStatus];
+    if (author == ALAuthorizationStatusRestricted || author ==ALAuthorizationStatusDenied){
+        //无权限 做一个友好的提示
+        UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"温馨提示" message:@"请打开相册权限" preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertAction *cancel = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil];
+        UIAlertAction *sure = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            // 跳转设置界面
+            NSURL * url = [NSURL URLWithString:UIApplicationOpenSettingsURLString];
+            if([[UIApplication sharedApplication] canOpenURL:url]) {
+                NSURL*url =[NSURL URLWithString:UIApplicationOpenSettingsURLString];
+                [[UIApplication sharedApplication] openURL:url];
+            }
+        }];
+        [alert addAction:cancel];
+        [alert addAction:sure];
+        [self presentViewController:alert animated:YES completion:nil];
+        return ;
+    } else {
+        //做你想做的（do what you want）
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            PHFetchResult<PHAssetCollection *> *assetCollections = [PHAssetCollection fetchAssetCollectionsWithType:PHAssetCollectionTypeAlbum subtype:PHAssetCollectionSubtypeAlbumRegular options:nil];
+            for (PHAssetCollection *assetCollection in assetCollections) {
+                [self enumerateAssetsInAssetCollection:assetCollection original:YES];
+            }
+            PHAssetCollection *cameraRoll = [PHAssetCollection fetchAssetCollectionsWithType:PHAssetCollectionTypeSmartAlbum subtype:PHAssetCollectionSubtypeSmartAlbumUserLibrary options:nil].lastObject;
+            [self enumerateAssetsInAssetCollection:cameraRoll original:YES];
+        });
+    }
 }
 
 /*
