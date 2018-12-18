@@ -92,7 +92,6 @@
         UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"温馨提示" message:@"请打开相册权限" preferredStyle:UIAlertControllerStyleAlert];
         UIAlertAction *cancel = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil];
         UIAlertAction *sure = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-            // 跳转设置界面
             NSURL * url = [NSURL URLWithString:UIApplicationOpenSettingsURLString];
             if([[UIApplication sharedApplication] canOpenURL:url]) {
                 NSURL*url =[NSURL URLWithString:UIApplicationOpenSettingsURLString];
@@ -147,6 +146,7 @@
     }
 }
 
+#pragma mark - UICollectionViewDataSource
 - (nonnull __kindof UICollectionViewCell *)collectionView:(nonnull UICollectionView *)collectionView cellForItemAtIndexPath:(nonnull NSIndexPath *)indexPath {
     TWPhotoCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"TWPhotoCellID" forIndexPath:indexPath];
     cell.imageView.image = _photoList[indexPath.item];
@@ -169,6 +169,7 @@
     }
 }
 
+#pragma mark - UICollectionViewDelegate
 - (NSInteger)collectionView:(nonnull UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
     return _photoList.count;
 }

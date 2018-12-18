@@ -18,7 +18,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface TWImagePickerController : UIViewController
 
-@property (nonatomic, copy) void (^selectPhoto)(UIImage *);
 @property (nonatomic, assign) BOOL needPreviewAndEdit;
 @property (nonatomic, weak) id<TWImagePickerControllerDelegate> delegate;
 
