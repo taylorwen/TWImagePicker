@@ -40,12 +40,13 @@
     // Do any additional setup after loading the view.
     [self initNav];
     [self.view addSubview:self.collectionView];
+    [self getOriginalImages];
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    [self getOriginalImages];
+    [self getThumbnailImages];
     // 隐藏系统导航栏
     [self.navigationController setNavigationBarHidden:YES animated:YES];
 }
@@ -80,6 +81,21 @@
         titleLabel.textColor = [UIColor colorWithRed:0.2 green:0.2 blue:0.2 alpha:1.0f];
         titleLabel.frame = CGRectMake(kScreenWidth/2-75, kStatusBarAndNavigationBarHeight-44, 150, 44);
         [navView addSubview:titleLabel];
+    });
+}
+
+- (void)getThumbnailImages
+{
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        // 获得所有的自定义相簿
+        PHFetchResult<PHAssetCollection *> *assetCollections = [PHAssetCollection fetchAssetCollectionsWithType:PHAssetCollectionTypeAlbum subtype:PHAssetCollectionSubtypeAlbumRegular options:nil];
+        // 遍历所有的自定义相簿
+        for (PHAssetCollection *assetCollection in assetCollections) {
+            [self enumerateAssetsInAssetCollection:assetCollection original:NO];
+        }
+        // 获得相机胶卷
+        PHAssetCollection *cameraRoll = [PHAssetCollection fetchAssetCollectionsWithType:PHAssetCollectionTypeSmartAlbum subtype:PHAssetCollectionSubtypeSmartAlbumUserLibrary options:nil].lastObject;
+        [self enumerateAssetsInAssetCollection:cameraRoll original:NO];
     });
 }
 
