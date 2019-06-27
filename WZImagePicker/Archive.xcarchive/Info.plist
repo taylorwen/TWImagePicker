@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>ApplicationProperties</key>
+	<dict>
+		<key>ApplicationPath</key>
+		<string>Applications/WZImagePicker.app</string>
+		<key>CFBundleIdentifier</key>
+		<string>com.masterwen.homekit.WZImagePicker</string>
+		<key>CFBundleShortVersionString</key>
+		<string>1.0</string>
+		<key>CFBundleVersion</key>
+		<string>1</string>
+		<key>SigningIdentity</key>
+		<string>iPhone Developer: Zhan Wen (G7V8AR3PP6)</string>
+	</dict>
+	<key>ArchiveVersion</key>
+	<integer>2</integer>
+	<key>CreationDate</key>
+	<date>2018-12-21T09:59:56Z</date>
+	<key>Name</key>
+	<string>WZImagePicker</string>
+	<key>SchemeName</key>
+	<string>WZImagePicker</string>
+</dict>
+</plist>
